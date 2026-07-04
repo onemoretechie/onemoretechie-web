@@ -1,50 +1,62 @@
 ---
-// OneMoreTechie navbar — 6 tabs, 4 dropdowns, dark/light toggle, mobile menu.
+// OneMoreTechie navbar — 6 tabs, 4 dropdowns, dark/light toggle, mobile overlay menu.
+// Dropdown parents don't navigate; only children link. Unbuilt destinations show a
+// SOON badge and are rendered as non-interactive spans, not dead <a> tags.
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isCurrent = (href: string) => {
+  const h = href.replace(/\/+$/, '') || '/';
+  return h === path;
+};
+const inside = (prefix: string) => path === prefix.replace(/\/+$/, '') || path.startsWith(prefix);
 ---
 
-<nav id="omt-nav">
+<nav id="omt-nav" aria-label="Primary">
   <div class="wrap">
     <div class="nav-inner">
-      <a class="nav-logo" href="/">
-        <span class="logo-one">One</span><span class="logo-more">More</span><span class="logo-techie">Techie</span>
+      <a class="nav-logo" href="/" aria-label="OneMoreTechie home">
+        <span class="logo-one" aria-hidden="true">One</span><span class="logo-more" aria-hidden="true">More</span><span class="logo-techie" aria-hidden="true">Techie</span>
       </a>
 
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
+        <li>
+          <a href="/" aria-current={isCurrent('/') ? 'page' : undefined}>Home</a>
+        </li>
 
         <li class="has-dropdown">
-          <a href="/topics/">Topics <span class="caret">▾</span></a>
-          <ul class="nav-dropdown">
-            <li><a class="nav-dd-item" href="/topics/aws/">
-              <span class="nav-dd-icon dd-aws">☁</span>
+          <button type="button" class="nav-dd-trigger" aria-expanded="false" aria-haspopup="true" data-current={inside('/topics/') || undefined}>
+            Topics <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav-dropdown" aria-label="Topics">
+            <li><a class="nav-dd-item" href="/topics/aws/" aria-current={isCurrent('/topics/aws/') ? 'page' : undefined}>
+              <span class="nav-dd-icon dd-aws" aria-hidden="true">☁</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">AWS</span>
                 <span class="nav-dd-desc">Services, serverless, cost &amp; FinOps</span>
               </span>
             </a></li>
-            <li><a class="nav-dd-item" href="/topics/devops/">
-              <span class="nav-dd-icon dd-devops">⚙</span>
+            <li><a class="nav-dd-item" href="/topics/devops/" aria-current={isCurrent('/topics/devops/') ? 'page' : undefined}>
+              <span class="nav-dd-icon dd-devops" aria-hidden="true">⚙</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">DevOps &amp; CI/CD</span>
                 <span class="nav-dd-desc">Pipelines, automation, observability</span>
               </span>
             </a></li>
-            <li><a class="nav-dd-item" href="/topics/architecture/">
-              <span class="nav-dd-icon dd-arch">⬡</span>
+            <li><a class="nav-dd-item" href="/topics/architecture/" aria-current={isCurrent('/topics/architecture/') ? 'page' : undefined}>
+              <span class="nav-dd-icon dd-arch" aria-hidden="true">⬡</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">Cloud Architecture</span>
                 <span class="nav-dd-desc">Scalable, multi-region, event-driven</span>
               </span>
             </a></li>
-            <li><a class="nav-dd-item" href="/topics/security/">
-              <span class="nav-dd-icon dd-sec">🔒</span>
+            <li><a class="nav-dd-item" href="/topics/security/" aria-current={isCurrent('/topics/security/') ? 'page' : undefined}>
+              <span class="nav-dd-icon dd-sec" aria-hidden="true">🔒</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">Security</span>
                 <span class="nav-dd-desc">IAM, zero-trust, compliance</span>
               </span>
             </a></li>
-            <li><a class="nav-dd-item" href="/topics/iac-kubernetes/">
-              <span class="nav-dd-icon dd-iac">📦</span>
+            <li><a class="nav-dd-item" href="/topics/iac-kubernetes/" aria-current={isCurrent('/topics/iac-kubernetes/') ? 'page' : undefined}>
+              <span class="nav-dd-icon dd-iac" aria-hidden="true">📦</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">IaC &amp; Kubernetes</span>
                 <span class="nav-dd-desc">Terraform, Helm, K8s, Ansible</span>
@@ -54,99 +66,105 @@
         </li>
 
         <li class="has-dropdown">
-          <a href="/runbooks/">Runbooks <span class="caret">▾</span></a>
-          <ul class="nav-dropdown">
-            <li><a class="nav-dd-item" href="/runbooks/aws/">
-              <span class="nav-dd-icon dd-aws">☁</span>
+          <button type="button" class="nav-dd-trigger" aria-expanded="false" aria-haspopup="true">
+            Runbooks <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav-dropdown" aria-label="Runbooks (coming soon)">
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-aws" aria-hidden="true">☁</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">AWS Runbooks</span>
+                <span class="nav-dd-label">AWS Runbooks <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Step-by-step operational playbooks</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/runbooks/deployment/">
-              <span class="nav-dd-icon dd-devops">⚙</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-devops" aria-hidden="true">⚙</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">Deployment Guides</span>
+                <span class="nav-dd-label">Deployment Guides <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">End-to-end CI/CD walkthroughs</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/runbooks/architecture/">
-              <span class="nav-dd-icon dd-arch">⬡</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-arch" aria-hidden="true">⬡</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">Architecture Docs</span>
+                <span class="nav-dd-label">Architecture Docs <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Reference architectures &amp; ADRs</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/runbooks/security/">
-              <span class="nav-dd-icon dd-sec">🔒</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-sec" aria-hidden="true">🔒</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">Security Runbooks</span>
+                <span class="nav-dd-label">Security Runbooks <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Incident response &amp; hardening</span>
               </span>
-            </a></li>
+            </span></li>
           </ul>
         </li>
 
         <li class="has-dropdown">
-          <a href="/interview/">Interview Prep <span class="caret">▾</span></a>
-          <ul class="nav-dropdown">
-            <li><a class="nav-dd-item" href="/interview/aws/">
-              <span class="nav-dd-icon dd-aws">☁</span>
+          <button type="button" class="nav-dd-trigger" aria-expanded="false" aria-haspopup="true">
+            Interview Prep <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav-dropdown" aria-label="Interview Prep (coming soon)">
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-aws" aria-hidden="true">☁</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">AWS Q&amp;A</span>
+                <span class="nav-dd-label">AWS Q&amp;A <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Service-by-service interview drills</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/interview/devops/">
-              <span class="nav-dd-icon dd-devops">⚙</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-devops" aria-hidden="true">⚙</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">DevOps Q&amp;A</span>
+                <span class="nav-dd-label">DevOps Q&amp;A <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">CI/CD, K8s, observability</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/interview/architect/">
-              <span class="nav-dd-icon dd-arch">⬡</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-arch" aria-hidden="true">⬡</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">Principal Architect Q&amp;A</span>
+                <span class="nav-dd-label">Principal Architect Q&amp;A <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Strategy, governance, leadership</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/interview/system-design/">
-              <span class="nav-dd-icon dd-iac">⚙</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-purple" aria-hidden="true">◆</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">System Design</span>
+                <span class="nav-dd-label">System Design <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">End-to-end scenario walkthroughs</span>
               </span>
-            </a></li>
+            </span></li>
           </ul>
         </li>
 
         <li class="has-dropdown">
-          <a href="/resources/">Resources <span class="caret">▾</span></a>
-          <ul class="nav-dropdown">
-            <li><a class="nav-dd-item" href="/resources/study-notes/">
-              <span class="nav-dd-icon dd-iac">📚</span>
+          <button type="button" class="nav-dd-trigger" aria-expanded="false" aria-haspopup="true">
+            Resources <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="nav-dropdown" aria-label="Resources">
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-iac" aria-hidden="true">📚</span>
               <span class="nav-dd-text">
-                <span class="nav-dd-label">Study Notes</span>
+                <span class="nav-dd-label">Study Notes <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Concise references across the stack</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/resources/roadmaps/">
-              <span class="nav-dd-icon dd-arch">🗺</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-arch" aria-hidden="true">🗺</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">Learning Roadmaps <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">Guided paths by role &amp; level</span>
               </span>
-            </a></li>
-            <li><a class="nav-dd-item" href="/resources/cheat-sheets/">
-              <span class="nav-dd-icon dd-resource">📋</span>
+            </span></li>
+            <li><span class="nav-dd-item nav-dd-soon">
+              <span class="nav-dd-icon dd-resource" aria-hidden="true">📋</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">Cheat Sheets <span class="soon">SOON</span></span>
                 <span class="nav-dd-desc">One-pagers for fast recall</span>
               </span>
-            </a></li>
+            </span></li>
             <li><a class="nav-dd-item" href="https://youtube.com/@onemoretechie" target="_blank" rel="noopener">
-              <span class="nav-dd-icon dd-sec">▶</span>
+              <span class="nav-dd-icon dd-sec" aria-hidden="true">▶</span>
               <span class="nav-dd-text">
                 <span class="nav-dd-label">YouTube Channel</span>
                 <span class="nav-dd-desc">Watch tutorials &amp; deep-dives</span>
@@ -155,31 +173,105 @@
           </ul>
         </li>
 
-        <li><a href="/about/">About</a></li>
+        <li><a href="/about/" aria-current={isCurrent('/about/') ? 'page' : undefined}>About</a></li>
       </ul>
 
       <div class="nav-right">
-        <a class="nav-gh" href="https://github.com/onemoretechie" target="_blank" rel="noopener" title="GitHub">GH</a>
-        <a class="nav-rss" href="/rss.xml" title="RSS">RSS</a>
-        <button class="theme-toggle" id="themeToggle" title="Toggle theme" type="button">☾</button>
-        <button aria-label="Open menu" class="mobile-menu-btn" id="mobileMenuBtn" type="button">☰</button>
+        <a class="nav-gh" href="https://github.com/onemoretechie" target="_blank" rel="noopener" aria-label="OneMoreTechie on GitHub">
+          <span aria-hidden="true">GH</span>
+        </a>
+        <a class="nav-rss" href="/rss.xml" aria-label="RSS feed">
+          <span aria-hidden="true">RSS</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">
+          <span aria-hidden="true">☾</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <span aria-hidden="true">☰</span>
+        </button>
       </div>
     </div>
   </div>
 </nav>
 
+<!-- Mobile overlay menu -->
+<div id="mobileNav" class="mobile-nav" role="dialog" aria-label="Mobile navigation" aria-modal="true" hidden>
+  <div class="mobile-nav-head">
+    <a class="nav-logo" href="/" aria-label="OneMoreTechie home">
+      <span class="logo-one" aria-hidden="true">One</span><span class="logo-more" aria-hidden="true">More</span><span class="logo-techie" aria-hidden="true">Techie</span>
+    </a>
+    <button class="mobile-nav-close" id="mobileNavClose" type="button" aria-label="Close menu">
+      <span aria-hidden="true">✕</span>
+    </button>
+  </div>
+
+  <ul class="mobile-nav-list">
+    <li><a href="/">Home</a></li>
+
+    <li class="mobile-dd">
+      <button class="mobile-dd-trigger" type="button" aria-expanded="false">
+        Topics <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <ul class="mobile-dd-list">
+        <li><a href="/topics/aws/">AWS</a></li>
+        <li><a href="/topics/devops/">DevOps &amp; CI/CD</a></li>
+        <li><a href="/topics/architecture/">Cloud Architecture</a></li>
+        <li><a href="/topics/security/">Security</a></li>
+        <li><a href="/topics/iac-kubernetes/">IaC &amp; Kubernetes</a></li>
+      </ul>
+    </li>
+
+    <li class="mobile-dd">
+      <button class="mobile-dd-trigger" type="button" aria-expanded="false">
+        Runbooks <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <ul class="mobile-dd-list mobile-dd-soon">
+        <li><span>AWS Runbooks <span class="soon">SOON</span></span></li>
+        <li><span>Deployment Guides <span class="soon">SOON</span></span></li>
+        <li><span>Architecture Docs <span class="soon">SOON</span></span></li>
+        <li><span>Security Runbooks <span class="soon">SOON</span></span></li>
+      </ul>
+    </li>
+
+    <li class="mobile-dd">
+      <button class="mobile-dd-trigger" type="button" aria-expanded="false">
+        Interview Prep <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <ul class="mobile-dd-list mobile-dd-soon">
+        <li><span>AWS Q&amp;A <span class="soon">SOON</span></span></li>
+        <li><span>DevOps Q&amp;A <span class="soon">SOON</span></span></li>
+        <li><span>Principal Architect Q&amp;A <span class="soon">SOON</span></span></li>
+        <li><span>System Design <span class="soon">SOON</span></span></li>
+      </ul>
+    </li>
+
+    <li class="mobile-dd">
+      <button class="mobile-dd-trigger" type="button" aria-expanded="false">
+        Resources <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <ul class="mobile-dd-list">
+        <li><span>Study Notes <span class="soon">SOON</span></span></li>
+        <li><span>Learning Roadmaps <span class="soon">SOON</span></span></li>
+        <li><span>Cheat Sheets <span class="soon">SOON</span></span></li>
+        <li><a href="https://youtube.com/@onemoretechie" target="_blank" rel="noopener">YouTube Channel</a></li>
+      </ul>
+    </li>
+
+    <li><a href="/about/">About</a></li>
+  </ul>
+</div>
+
 <style>
   #omt-nav {
     position: sticky; top: 0; z-index: 500;
-    background: rgba(8, 11, 18, 0.88);
+    background: var(--nav-bg, rgba(8, 11, 18, 0.88));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--line);
     transition: background 0.25s;
   }
-  :global([data-theme="light"]) #omt-nav {
-    background: rgba(248, 250, 252, 0.90);
-  }
+  :global(:root) { --nav-bg: rgba(8, 11, 18, 0.88); }
+  :global([data-theme="light"]) { --nav-bg: rgba(248, 250, 252, 0.90); }
 
   .nav-inner {
     display: flex; align-items: center; justify-content: space-between;
@@ -203,7 +295,8 @@
     list-style: none; padding: 0; margin: 0;
   }
   .nav-links > li { display: flex; align-items: center; }
-  .nav-links > li > a {
+  .nav-links > li > a,
+  .nav-links > li > .nav-dd-trigger {
     font-family: var(--fh);
     font-size: 0.78rem; font-weight: 500; letter-spacing: 0.01em;
     color: var(--text2);
@@ -213,20 +306,28 @@
     white-space: nowrap;
     display: inline-flex; align-items: center; gap: 4px;
     text-decoration: none;
+    border: none; background: transparent; cursor: pointer;
+    font: inherit;
   }
+  .nav-links > li > a { font-family: var(--fh); }
   .nav-links > li > a:hover,
-  .nav-links > li.has-dropdown:hover > a,
-  .nav-links > li.has-dropdown:focus-within > a {
+  .nav-links > li > .nav-dd-trigger:hover,
+  .nav-links > li.has-dropdown:hover > .nav-dd-trigger,
+  .nav-links > li.has-dropdown:focus-within > .nav-dd-trigger {
     color: var(--text);
     background: var(--bg4);
   }
-  .has-dropdown > a .caret {
+  .nav-links > li > a[aria-current="page"],
+  .nav-links > li > .nav-dd-trigger[data-current] {
+    color: var(--accent);
+  }
+  .caret {
     font-size: 0.6rem;
     transition: transform 0.18s;
     display: inline-block;
   }
-  .has-dropdown:hover > a .caret,
-  .has-dropdown:focus-within > a .caret { transform: rotate(180deg); }
+  .has-dropdown:hover > .nav-dd-trigger .caret,
+  .has-dropdown:focus-within > .nav-dd-trigger .caret { transform: rotate(180deg); }
 
   .has-dropdown { position: relative; }
   .nav-dropdown {
@@ -251,8 +352,8 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
   }
   .nav-dropdown::before {
-    content: '';
-    position: absolute; top: -8px; left: 0; right: 0; height: 8px;
+    content: ''; position: absolute;
+    top: -8px; left: 0; right: 0; height: 8px;
   }
   .has-dropdown:hover > .nav-dropdown,
   .has-dropdown:focus-within > .nav-dropdown {
@@ -270,7 +371,9 @@
     transition: background 0.15s !important;
     color: var(--text) !important;
   }
-  .nav-dd-item:hover { background: var(--bg3) !important; }
+  a.nav-dd-item:hover { background: var(--bg3) !important; }
+  .nav-dd-soon { cursor: default; opacity: 0.7; }
+  .nav-dd-soon .nav-dd-label { color: var(--text2); }
 
   .nav-dd-icon {
     width: 32px; height: 32px;
@@ -284,6 +387,7 @@
   .dd-arch     { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
   .dd-sec      { background: rgba(248, 113, 113, 0.14); color: var(--red); }
   .dd-iac      { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+  .dd-purple   { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
   .dd-resource { background: rgba(251, 191, 36, 0.14); color: var(--amber); }
 
   .nav-dd-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -291,7 +395,7 @@
     font-family: var(--fh); font-weight: 600;
     color: var(--text); font-size: 0.86rem; line-height: 1.3;
   }
-  .nav-dd-item:hover .nav-dd-label { color: var(--accent); }
+  a.nav-dd-item:hover .nav-dd-label { color: var(--accent); }
   .nav-dd-desc {
     font-family: var(--fb); font-weight: 300;
     color: var(--text3); font-size: 0.72rem; line-height: 1.4;
@@ -333,6 +437,83 @@
     cursor: pointer;
     align-items: center; justify-content: center;
   }
+  .mobile-menu-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── Mobile overlay ── */
+  .mobile-nav {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 700;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem 2rem;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .mobile-nav[hidden] { display: none; }
+  .mobile-nav.is-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-nav-head {
+    display: flex; align-items: center; justify-content: space-between;
+    height: var(--nav-h);
+    margin-bottom: 0.5rem;
+  }
+  .mobile-nav-close {
+    width: 40px; height: 40px; border-radius: var(--r);
+    background: var(--bg3); border: 1px solid var(--line2);
+    color: var(--text); font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mobile-nav-close:hover { color: var(--accent); border-color: var(--accent); }
+  .mobile-nav-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0.15rem;
+  }
+  .mobile-nav-list > li > a,
+  .mobile-dd-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%;
+    padding: 14px 12px;
+    border-radius: var(--r);
+    font-family: var(--fh);
+    font-size: 1rem; font-weight: 600;
+    color: var(--text); text-decoration: none;
+    background: transparent; border: none;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    min-height: 44px;
+  }
+  .mobile-nav-list > li > a:hover,
+  .mobile-dd-trigger:hover { background: var(--bg3); }
+  .mobile-dd-list {
+    list-style: none; padding: 0 0 0.5rem 12px; margin: 0;
+    display: none;
+  }
+  .mobile-dd.is-open > .mobile-dd-list { display: block; }
+  .mobile-dd-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
+  .mobile-dd-list li { padding: 0; }
+  .mobile-dd-list li a,
+  .mobile-dd-list li > span {
+    display: block;
+    padding: 10px 12px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 0.92rem;
+    border-radius: var(--r);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .mobile-dd-list li a:hover { background: var(--bg3); color: var(--accent); }
+  .mobile-dd-list li > span { color: var(--text3); }
+  .mobile-dd-list.mobile-dd-soon li > span { color: var(--text3); }
 
   @media (max-width: 1100px) {
     .nav-links { display: none; }
@@ -341,23 +522,111 @@
 </style>
 
 <script is:inline>
-  (function() {
-    var KEY = 'omt-theme';
+  (function () {
+    // ── Theme toggle ──
+    var THEME_KEY = 'omt-theme';
     var icons = { dark: '☀', light: '☾' };
-    function apply(theme) {
+    function applyTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      var btn = document.getElementById('themeToggle');
-      if (btn) btn.textContent = icons[theme] || icons.dark;
-      try { localStorage.setItem(KEY, theme); } catch (e) {}
+      var toggleBtn = document.getElementById('themeToggle');
+      if (toggleBtn) {
+        var span = toggleBtn.querySelector('span');
+        if (span) span.textContent = icons[theme] || icons.dark;
+      }
+      try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
     }
     var saved = 'dark';
-    try { saved = localStorage.getItem(KEY) || 'dark'; } catch (e) {}
-    apply(saved);
-    document.addEventListener('click', function(e) {
-      if (e.target && e.target.id === 'themeToggle') {
+    try { saved = localStorage.getItem(THEME_KEY) || 'dark'; } catch (e) {}
+    applyTheme(saved);
+
+    document.addEventListener('click', function (e) {
+      var target = e.target;
+      if (!(target instanceof Element)) return;
+      var toggle = target.closest('#themeToggle');
+      if (toggle) {
         var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-        apply(cur === 'dark' ? 'light' : 'dark');
+        applyTheme(cur === 'dark' ? 'light' : 'dark');
       }
+    });
+
+    // ── Mobile menu open/close ──
+    var openBtn = document.getElementById('mobileMenuBtn');
+    var closeBtn = document.getElementById('mobileNavClose');
+    var overlay = document.getElementById('mobileNav');
+    var lastFocused = null;
+
+    function openMobileNav() {
+      if (!overlay) return;
+      lastFocused = document.activeElement;
+      overlay.hidden = false;
+      // next tick so transition can run
+      requestAnimationFrame(function () { overlay.classList.add('is-open'); });
+      if (openBtn) openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeMobileNav() {
+      if (!overlay) return;
+      overlay.classList.remove('is-open');
+      if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      setTimeout(function () { overlay.hidden = true; }, 200);
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openMobileNav);
+    if (closeBtn) closeBtn.addEventListener('click', closeMobileNav);
+
+    // Close overlay when a real link is clicked (but not accordion buttons or dead SOON spans)
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        var t = e.target;
+        if (!(t instanceof Element)) return;
+        var link = t.closest('a[href]');
+        if (link) closeMobileNav();
+      });
+    }
+
+    // Escape closes overlay
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay && !overlay.hidden) closeMobileNav();
+    });
+
+    // Mobile accordion — one at a time
+    var accordions = document.querySelectorAll('.mobile-dd-trigger');
+    accordions.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var li = btn.parentElement;
+        if (!li) return;
+        var willOpen = !li.classList.contains('is-open');
+        // Collapse siblings first
+        document.querySelectorAll('.mobile-dd.is-open').forEach(function (sib) {
+          sib.classList.remove('is-open');
+          var sibBtn = sib.querySelector('.mobile-dd-trigger');
+          if (sibBtn) sibBtn.setAttribute('aria-expanded', 'false');
+        });
+        if (willOpen) {
+          li.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Desktop dropdown aria-expanded sync (hover-based; :focus-within also opens)
+    var ddTriggers = document.querySelectorAll('.nav-dd-trigger');
+    ddTriggers.forEach(function (trigger) {
+      var li = trigger.parentElement;
+      if (!li) return;
+      var setExpanded = function (v) { trigger.setAttribute('aria-expanded', v ? 'true' : 'false'); };
+      li.addEventListener('mouseenter', function () { setExpanded(true); });
+      li.addEventListener('mouseleave', function () { setExpanded(false); });
+      li.addEventListener('focusin', function () { setExpanded(true); });
+      li.addEventListener('focusout', function (e) {
+        if (!li.contains(e.relatedTarget)) setExpanded(false);
+      });
     });
   })();
 </script>

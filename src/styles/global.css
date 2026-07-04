@@ -222,6 +222,42 @@ code, pre {
   50% { opacity: 0.5; transform: scale(0.8); }
 }
 
+/* ── PILLAR COLOR TOKENS ── */
+/* Two variants:
+   `.pill-*`   — chip style (color + bg + border). Apply directly to a chip element.
+                 Used by BlogPost header pill, blog index post-pillar chip, filter chips.
+   `.tc-*`     — container tint marker (child icon uses descendant selector).
+                 Used by homepage topic-card + topic page topic-hero.
+   `.ti-*`     — standalone icon-tint utility for icon slots outside a .tc-* container.
+   Add a new pillar hue in one place: append rules for each of pill/tc-icon/ti below. */
+
+/* Chip variant */
+.pill-orange { color: var(--orange); background: rgba(251, 146, 60, 0.10); border-color: rgba(251, 146, 60, 0.24); }
+.pill-cyan   { color: var(--accent); background: var(--adim);              border-color: var(--abdr); }
+.pill-purple { color: var(--purple); background: rgba(167, 139, 250, 0.10); border-color: rgba(167, 139, 250, 0.24); }
+.pill-red    { color: var(--red);    background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.24); }
+.pill-blue   { color: var(--blue);   background: rgba(96, 165, 250, 0.10);  border-color: rgba(96, 165, 250, 0.24); }
+.pill-green  { color: var(--green);  background: rgba(52, 211, 153, 0.10);  border-color: rgba(52, 211, 153, 0.24); }
+.pill-amber  { color: var(--amber);  background: rgba(251, 191, 36, 0.10);  border-color: rgba(251, 191, 36, 0.24); }
+
+/* Container tint — colors ONLY nested icons, not the container itself */
+.tc-orange > .topic-icon, .tc-orange > .topic-icon-lg { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
+.tc-cyan   > .topic-icon, .tc-cyan   > .topic-icon-lg { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
+.tc-purple > .topic-icon, .tc-purple > .topic-icon-lg { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
+.tc-red    > .topic-icon, .tc-red    > .topic-icon-lg { background: rgba(248, 113, 113, 0.14); color: var(--red); }
+.tc-blue   > .topic-icon, .tc-blue   > .topic-icon-lg { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+.tc-green  > .topic-icon, .tc-green  > .topic-icon-lg { background: rgba(52, 211, 153, 0.14); color: var(--green); }
+.tc-amber  > .topic-icon, .tc-amber  > .topic-icon-lg { background: rgba(251, 191, 36, 0.14); color: var(--amber); }
+
+/* Standalone icon tint utility */
+.ti-orange { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
+.ti-cyan   { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
+.ti-purple { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
+.ti-red    { background: rgba(248, 113, 113, 0.14); color: var(--red); }
+.ti-blue   { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+.ti-green  { background: rgba(52, 211, 153, 0.14); color: var(--green); }
+.ti-amber  { background: rgba(251, 191, 36, 0.14); color: var(--amber); }
+
 /* ── FOCUS POLISH ── */
 :focus-visible {
   outline: 2px solid var(--accent);

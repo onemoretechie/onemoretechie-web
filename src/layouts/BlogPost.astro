@@ -9,7 +9,7 @@ import { SITE_TITLE, TOPIC_PILLARS } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage, topic, type, youtube_url, github_repo, github_path, tags } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, topic, type, youtube_url, github_repo, github_path, tags } = Astro.props;
 
 const pillar = TOPIC_PILLARS.find((p) => p.slug === topic);
 const typeLabel: Record<string, string> = {
@@ -26,6 +26,7 @@ const ghPath = github_repo && github_path
   : github_repo?.replace('https://github.com/', '');
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <BaseHead title={`${title} · ${SITE_TITLE}`} description={description} />
@@ -39,7 +40,7 @@ const ghPath = github_repo && github_path
         <header class="post-header">
           <div class="post-meta">
             {pillar && (
-              <a class={`post-topic tc-${pillar.color}`} href={`/topics/${pillar.slug}/`}>
+              <a class={`post-topic pill-${pillar.color}`} href={`/topics/${pillar.slug}/`}>
                 <span class="post-topic-icon">{pillar.icon}</span>
                 {pillar.label}
               </a>
@@ -58,7 +59,7 @@ const ghPath = github_repo && github_path
 
           {heroImage && (
             <div class="post-hero">
-              <Image src={heroImage} alt="" widths={[720, 1080, 1440]} sizes="(max-width: 720px) 100vw, 900px" />
+              <Image src={heroImage} alt={heroImageAlt ?? title} widths={[720, 1080, 1440]} sizes="(max-width: 720px) 100vw, 900px" />
             </div>
           )}
 
@@ -164,11 +165,7 @@ const ghPath = github_repo && github_path
         border: 1px solid;
       }
       .post-topic-icon { font-size: 0.85rem; }
-      .tc-orange { color: var(--orange); background: rgba(251, 146, 60, 0.10); border-color: rgba(251, 146, 60, 0.24); }
-      .tc-cyan   { color: var(--accent); background: var(--adim);              border-color: var(--abdr); }
-      .tc-purple { color: var(--purple); background: rgba(167, 139, 250, 0.10); border-color: rgba(167, 139, 250, 0.24); }
-      .tc-red    { color: var(--red);    background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.24); }
-      .tc-blue   { color: var(--blue);   background: rgba(96, 165, 250, 0.10);  border-color: rgba(96, 165, 250, 0.24); }
+      /* Pillar chip colors come from global.css .pill-* */
 
       .post-type {
         font-family: var(--fh);

@@ -28,15 +28,15 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           linked to their companion YouTube videos and GitHub code.
         </p>
 
-        <div class="blog-filters">
-          <a class="filter-chip filter-active" href="/blog/">All</a>
+        <nav class="blog-pillars" aria-label="Browse by pillar">
+          <span class="blog-pillars-label">Browse a pillar →</span>
           {TOPIC_PILLARS.map((p) => (
             <a class={`filter-chip filter-${p.color}`} href={`/topics/${p.slug}/`}>
-              <span class="filter-icon">{p.icon}</span>
+              <span class="filter-icon" aria-hidden="true">{p.icon}</span>
               {p.label}
             </a>
           ))}
-        </div>
+        </nav>
       </header>
 
       {posts.length > 0 ? (
@@ -48,13 +48,13 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
                 <a class="post-item-link" href={`/blog/${post.id}/`}>
                   {post.data.heroImage && (
                     <div class="post-item-image">
-                      <Image src={post.data.heroImage} alt="" widths={[400, 800]} sizes="(max-width: 720px) 100vw, 400px" />
+                      <Image src={post.data.heroImage} alt={post.data.heroImageAlt ?? post.data.title} widths={[400, 800]} sizes="(max-width: 720px) 100vw, 400px" />
                     </div>
                   )}
                   <div class="post-item-body">
                     <div class="post-item-meta">
                       {pillar && (
-                        <span class={`post-pillar tc-${pillar.color}`}>
+                        <span class={`post-pillar pill-${pillar.color}`}>
                           <span class="pp-icon">{pillar.icon}</span>
                           {pillar.label}
                         </span>
@@ -112,14 +112,24 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         max-width: 640px;
       }
 
-      /* Filter chips */
-      .blog-filters {
+      /* Pillar shortcuts — navigate to /topics/<slug>/, not a filter of this page */
+      .blog-pillars {
         display: flex;
         gap: 0.5rem;
         flex-wrap: wrap;
+        align-items: center;
         margin-top: 1.75rem;
         padding-top: 1.75rem;
         border-top: 1px solid var(--line);
+      }
+      .blog-pillars-label {
+        font-family: var(--fh);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-right: 0.35rem;
       }
       .filter-chip {
         display: inline-flex;
@@ -219,11 +229,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         border: 1px solid;
       }
       .pp-icon { font-size: 0.8rem; }
-      .tc-orange { color: var(--orange); background: rgba(251, 146, 60, 0.10); border-color: rgba(251, 146, 60, 0.24); }
-      .tc-cyan   { color: var(--accent); background: var(--adim);              border-color: var(--abdr); }
-      .tc-purple { color: var(--purple); background: rgba(167, 139, 250, 0.10); border-color: rgba(167, 139, 250, 0.24); }
-      .tc-red    { color: var(--red);    background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.24); }
-      .tc-blue   { color: var(--blue);   background: rgba(96, 165, 250, 0.10);  border-color: rgba(96, 165, 250, 0.24); }
+      /* Pillar chip colors come from global.css .pill-* */
       .post-item-date {
         font-size: 0.72rem;
         color: var(--text3);

@@ -63,7 +63,7 @@ const { Content } = await render(topic);
 
       <div class="topic-footer">
         <a class="btn-outline" href="/">← Back home</a>
-        <a class="btn-primary" href={`/blog/?topic=${topic.data.slug}`}>Browse {topic.data.title} tutorials →</a>
+        <a class="btn-primary" href="/blog/">Browse all tutorials →</a>
       </div>
     </main>
     <Footer />
@@ -91,11 +91,7 @@ const { Content } = await render(topic);
         font-size: 28px;
         flex-shrink: 0;
       }
-      .tc-orange .topic-icon-lg { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
-      .tc-cyan   .topic-icon-lg { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
-      .tc-purple .topic-icon-lg { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
-      .tc-red    .topic-icon-lg { background: rgba(248, 113, 113, 0.14); color: var(--red); }
-      .tc-blue   .topic-icon-lg { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+      /* .tc-* container tint (child .topic-icon-lg) lives in global.css */
 
       .topic-h1 {
         font-family: var(--fh);

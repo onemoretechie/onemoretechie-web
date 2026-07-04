@@ -12,6 +12,7 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: z.optional(image()),
+      heroImageAlt: z.string().optional(),
       // Which of the 5 pillars this post belongs to
       topic: z.enum(['aws', 'devops', 'architecture', 'security', 'iac-kubernetes']),
       // Content type — for filtering "how-to" vs "runbook" vs "interview" etc.

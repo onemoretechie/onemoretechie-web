@@ -6,13 +6,14 @@ export const SITE_TAGLINE = 'Learn. Build. Ship. One tutorial at a time.';
 export const SITE_DESCRIPTION =
   'Practical, hands-on tutorials on AWS, DevOps, Cloud Architecture, Security and IaC — written by a Principal Cloud Architect for engineers who ship to production.';
 
-export const SITE_URL = 'https://onemoretechie.com';
+// Note: canonical site URL is set in astro.config.mjs (`site` field). Do not duplicate here.
 
 // Author identity for the educator brand (kept separate from PRIT Cloud consulting identity).
 export const AUTHOR = {
   name: 'Chandramani Tiwari',
   role: 'Principal Cloud Architect · DevSecOps Lead',
   bio: 'Sharing production-grade guidance across AWS, DevOps, Cloud Architecture, Security and IaC — the topics I work with daily.',
+  initials: 'CT',
 };
 
 // Social + brand surfaces
@@ -34,10 +35,12 @@ export const TOPIC_PILLARS = [
   { slug: 'iac-kubernetes', label: 'IaC & Kubernetes', color: 'blue', icon: '📦' },
 ] as const;
 
-// Homepage stat callouts — kept honest to the actual brand claims
+// Homepage stat callouts.
+// EDIT-BEFORE-PUBLISHING: verify these numbers match your actual credentials before the site goes live.
+// Certification count: memory confirms AIF-C01 (2026-06-17). Update to match total earned certs.
 export const HERO_STATS = [
   { value: '5', suffix: '', label: 'Topic Pillars' },
   { value: '10', suffix: '+', label: 'Yrs Experience' },
-  { value: '3', suffix: 'x', label: 'Certified' },
+  { value: '3', suffix: 'x', label: 'AWS Certified' },
   { value: 'AU·UK·US', suffix: '', label: 'Multi-Region' },
 ];

@@ -1,63 +1,284 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import Layout from '../layouts/Page.astro';
+import { AUTHOR, SOCIAL, TOPIC_PILLARS } from '../consts';
 ---
 
 <Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+  title="About"
+  description="OneMoreTechie is a Principal Cloud Architect and DevSecOps leader sharing production-grade tutorials on AWS, DevOps, Cloud Architecture, Security, and IaC & Kubernetes."
 >
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+  <header class="about-hero">
+    <div class="about-avatar" aria-hidden="true">{AUTHOR.initials}</div>
+    <div>
+      <div class="section-label">About</div>
+      <h1 class="about-h1">{AUTHOR.name}</h1>
+      <p class="about-role">{AUTHOR.role}</p>
+    </div>
+  </header>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+  <section class="about-lede">
+    <p>
+      OneMoreTechie is a tutorial channel + blog by a Principal Cloud Architect and
+      DevSecOps leader working across AWS at scale — daily reality that shapes every
+      post here. The goal: share what actually works in production, not what looks
+      good in a slide deck.
+    </p>
+    <p>
+      Every article pairs with a companion YouTube video and, where relevant, a live
+      GitHub repo with runnable code. Readers get a choice of medium; the same
+      source material feeds interview prep, on-the-job reference, and self-directed
+      learning.
+    </p>
+  </section>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+  <section class="about-block">
+    <div class="section-label">What you'll find here</div>
+    <h2 class="about-h2">Five topic pillars</h2>
+    <p class="about-sub">
+      Each pillar is a durable subject area — the ones I work in daily and can speak
+      to with production experience, not tutorial regurgitation.
+    </p>
+    <ul class="pillars-list">
+      {TOPIC_PILLARS.map((p) => (
+        <li>
+          <a class={`pillar-tile pill-${p.color}`} href={`/topics/${p.slug}/`}>
+            <span class="pillar-icon" aria-hidden="true">{p.icon}</span>
+            <span class="pillar-label">{p.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+  <section class="about-block">
+    <div class="section-label">Content medium</div>
+    <h2 class="about-h2">Blog, YouTube, GitHub — same source</h2>
+    <div class="medium-grid">
+      <div class="medium-card">
+        <div class="medium-icon" aria-hidden="true">📝</div>
+        <div class="medium-label">Blog</div>
+        <p class="medium-desc">Written deep-dives — searchable, linkable, editable as knowledge evolves.</p>
+      </div>
+      <div class="medium-card">
+        <div class="medium-icon" aria-hidden="true">▶</div>
+        <div class="medium-label">YouTube</div>
+        <p class="medium-desc">Screen-recorded walkthroughs of the same content, for readers who prefer video.</p>
+      </div>
+      <div class="medium-card">
+        <div class="medium-icon" aria-hidden="true">◍</div>
+        <div class="medium-label">GitHub</div>
+        <p class="medium-desc">Runnable code companion to the tutorials — Terraform, Helm, playbooks, sample apps.</p>
+      </div>
+    </div>
+  </section>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
+  <section class="about-block">
+    <div class="section-label">Connect</div>
+    <h2 class="about-h2">Subscribe or follow along</h2>
+    <p class="about-sub">
+      The channel and blog publish on the same cadence. Comments and pull requests
+      on the code repos are welcome.
+    </p>
+    <ul class="social-links">
+      <li><a class="social-btn" href={SOCIAL.youtube} target="_blank" rel="noopener">
+        <span aria-hidden="true">▶</span> YouTube
+      </a></li>
+      <li><a class="social-btn" href={SOCIAL.github} target="_blank" rel="noopener">
+        <span aria-hidden="true">◍</span> GitHub
+      </a></li>
+      <li><a class="social-btn" href={SOCIAL.linkedin} target="_blank" rel="noopener">
+        <span aria-hidden="true">in</span> LinkedIn
+      </a></li>
+      <li><a class="social-btn" href={SOCIAL.twitter} target="_blank" rel="noopener">
+        <span aria-hidden="true">X</span> Twitter
+      </a></li>
+      <li><a class="social-btn" href="/rss.xml">
+        <span aria-hidden="true">📡</span> RSS
+      </a></li>
+    </ul>
+  </section>
+
+  <style>
+    .about-hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.75rem;
+      align-items: center;
+      padding: 2rem;
+      background: var(--bg2);
+      border: 1px solid var(--line2);
+      border-radius: var(--rl);
+      margin-bottom: 2.5rem;
+    }
+    .about-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fh);
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--bg);
+      flex-shrink: 0;
+    }
+    .about-h1 {
+      font-family: var(--fh);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+      margin: 0.25rem 0 0.4rem;
+    }
+    .about-role {
+      font-size: 0.95rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .about-lede { margin-bottom: 3rem; }
+    .about-lede p {
+      font-size: 1.05rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+      max-width: 720px;
+    }
+    .about-block {
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--line);
+      margin-bottom: 2rem;
+    }
+    .about-h2 {
+      font-family: var(--fh);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin: 0.35rem 0 0.6rem;
+    }
+    .about-sub {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.7;
+      max-width: 640px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Pillar tiles */
+    .pillars-list {
+      list-style: none; padding: 0; margin: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+    .pillar-tile {
+      display: flex; flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem;
+      border-radius: var(--r);
+      border: 1px solid;
+      text-decoration: none;
+      transition: transform 0.18s;
+    }
+    .pillar-tile:hover { transform: translateY(-2px); color: inherit; }
+    .pillar-icon {
+      font-size: 1.15rem;
+      width: 34px; height: 34px;
+      border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+    }
+    :global([data-theme="light"]) .pillar-tile .pillar-icon {
+      background: rgba(255, 255, 255, 0.6);
+    }
+    .pillar-label {
+      font-family: var(--fh);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: inherit;
+    }
+
+    /* Medium (blog/YT/GitHub) grid */
+    .medium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .medium-card {
+      padding: 1.5rem;
+      background: var(--bg2);
+      border: 1px solid var(--line);
+      border-radius: var(--rl);
+    }
+    .medium-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--r);
+      background: var(--adim);
+      color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 0.85rem;
+    }
+    .medium-label {
+      font-family: var(--fh);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .medium-desc {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
+    /* Social */
+    .social-links {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--bg2);
+      border: 1px solid var(--line2);
+      border-radius: var(--r);
+      font-family: var(--fh);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.18s;
+    }
+    .social-btn > span {
+      display: inline-flex;
+      width: 20px; height: 20px;
+      align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      background: var(--adim);
+      color: var(--accent);
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .social-btn:hover {
+      border-color: var(--abdr);
+      background: var(--bg3);
+      color: var(--text);
+    }
+
+    @media (max-width: 900px) {
+      .pillars-list { grid-template-columns: repeat(2, 1fr); }
+      .medium-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .pillars-list { grid-template-columns: 1fr; }
+      .about-hero { grid-template-columns: 1fr; text-align: left; }
+    }
+  </style>
 </Layout>

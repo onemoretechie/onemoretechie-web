@@ -3,7 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_DESCRIPTION, SITE_TITLE, HERO_STATS } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, HERO_STATS, TOPIC_PILLARS } from '../consts';
 import { getCollection } from 'astro:content';
 
 // Load all topic pillars, sorted by their `order` field
@@ -83,16 +83,24 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <div class="section-label">Latest</div>
           <div class="section-title">Recent tutorials &amp; deep-dives</div>
           <div class="posts-grid">
-            {posts.map((p) => (
-              <a class="post-card" href={`/blog/${p.id}/`}>
-                <div class="post-meta">
-                  <span class="post-topic">{p.data.topic}</span>
-                  <span class="post-date"><FormattedDate date={p.data.pubDate} /></span>
-                </div>
-                <h3 class="post-title">{p.data.title}</h3>
-                <p class="post-excerpt">{p.data.description}</p>
-              </a>
-            ))}
+            {posts.map((p) => {
+              const pillar = TOPIC_PILLARS.find((tp) => tp.slug === p.data.topic);
+              return (
+                <a class="post-card" href={`/blog/${p.id}/`}>
+                  <div class="post-meta">
+                    {pillar && (
+                      <span class={`post-topic pill-${pillar.color}`}>
+                        <span class="post-topic-icon" aria-hidden="true">{pillar.icon}</span>
+                        {pillar.label}
+                      </span>
+                    )}
+                    <span class="post-date"><FormattedDate date={p.data.pubDate} /></span>
+                  </div>
+                  <h3 class="post-title">{p.data.title}</h3>
+                  <p class="post-excerpt">{p.data.description}</p>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -234,11 +242,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         font-size: 18px;
         margin-bottom: 1rem;
       }
-      .tc-orange .topic-icon { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
-      .tc-cyan   .topic-icon { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
-      .tc-purple .topic-icon { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
-      .tc-red    .topic-icon { background: rgba(248, 113, 113, 0.14); color: var(--red); }
-      .tc-blue   .topic-icon { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+      /* .tc-* container tint (child .topic-icon) lives in global.css */
       .topic-name {
         font-family: var(--fh);
         font-size: 0.98rem;
@@ -282,16 +286,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         margin-bottom: 0.85rem;
       }
       .post-topic {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--fh);
         font-size: 0.62rem;
         font-weight: 700;
-        letter-spacing: 0.09em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 3px 9px;
         border-radius: 100px;
-        color: var(--accent);
-        background: var(--adim);
-        border: 1px solid var(--abdr);
+        border: 1px solid;
       }
+      .post-topic-icon { font-size: 0.8rem; }
       .post-date {
         font-size: 0.7rem;
         color: var(--text3);

@@ -1,0 +1,36 @@
+---
+// Generic static-page layout. Use for /about/, /privacy/, /404/, hub landing pages —
+// anywhere that shouldn't be styled as a blog post (no topic pillar, no pubDate).
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${title} · ${SITE_TITLE}`} description={description} />
+  </head>
+  <body>
+    <Header />
+    <main class="wrap page-wrap">
+      <slot />
+    </main>
+    <Footer />
+
+    <style>
+      .page-wrap {
+        padding: 3rem 2rem 4rem;
+        max-width: 900px;
+      }
+    </style>
+  </body>
+</html>
