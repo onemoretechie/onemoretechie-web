@@ -5,110 +5,292 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_TITLE, TOPIC_PILLARS } from '../../consts';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={`All tutorials · ${SITE_TITLE}`} description="Tutorials and deep-dives across AWS, DevOps, Cloud Architecture, Security and IaC & Kubernetes." />
+  </head>
+  <body>
+    <Header />
+
+    <main class="wrap blog-wrap">
+      <header class="blog-header">
+        <div class="section-label">Tutorials</div>
+        <h1 class="blog-title">All posts</h1>
+        <p class="blog-lede">
+          Practical, hands-on guides across the five pillars — filterable, tagged, and
+          linked to their companion YouTube videos and GitHub code.
+        </p>
+
+        <div class="blog-filters">
+          <a class="filter-chip filter-active" href="/blog/">All</a>
+          {TOPIC_PILLARS.map((p) => (
+            <a class={`filter-chip filter-${p.color}`} href={`/topics/${p.slug}/`}>
+              <span class="filter-icon">{p.icon}</span>
+              {p.label}
+            </a>
+          ))}
+        </div>
+      </header>
+
+      {posts.length > 0 ? (
+        <ul class="post-list">
+          {posts.map((post) => {
+            const pillar = TOPIC_PILLARS.find((p) => p.slug === post.data.topic);
+            return (
+              <li class="post-item">
+                <a class="post-item-link" href={`/blog/${post.id}/`}>
+                  {post.data.heroImage && (
+                    <div class="post-item-image">
+                      <Image src={post.data.heroImage} alt="" widths={[400, 800]} sizes="(max-width: 720px) 100vw, 400px" />
+                    </div>
+                  )}
+                  <div class="post-item-body">
+                    <div class="post-item-meta">
+                      {pillar && (
+                        <span class={`post-pillar tc-${pillar.color}`}>
+                          <span class="pp-icon">{pillar.icon}</span>
+                          {pillar.label}
+                        </span>
+                      )}
+                      <span class="post-item-date"><FormattedDate date={post.data.pubDate} /></span>
+                    </div>
+                    <h2 class="post-item-title">{post.data.title}</h2>
+                    <p class="post-item-desc">{post.data.description}</p>
+                    <div class="post-item-media">
+                      {post.data.youtube_url && <span class="mm-badge">🎥 Video</span>}
+                      {post.data.github_repo && <span class="mm-badge">💻 Code</span>}
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h2 class="empty-title">First tutorials publish soon</h2>
+          <p class="empty-desc">
+            8 topic capsules land Mon &amp; Thu — multi-region failover, well-architected,
+            IAM at scale, Terraform at scale, EKS production, cost optimisation, CI/CD, and
+            multi-tenant SaaS system design.
+          </p>
+          <a class="btn-primary" href="https://youtube.com/@onemoretechie" target="_blank" rel="noopener">
+            Subscribe on YouTube →
+          </a>
+        </div>
+      )}
+    </main>
+
+    <Footer />
+
+    <style>
+      .blog-wrap {
+        padding: 3rem 2rem 4rem;
+        max-width: 1000px;
+      }
+      .blog-header { margin-bottom: 2.5rem; }
+      .blog-title {
+        font-family: var(--fh);
+        font-size: clamp(2rem, 4vw, 2.6rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--text);
+        margin: 0.35rem 0 0.85rem;
+      }
+      .blog-lede {
+        font-size: 1.05rem;
+        color: var(--text2);
+        line-height: 1.7;
+        max-width: 640px;
+      }
+
+      /* Filter chips */
+      .blog-filters {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 1.75rem;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--line);
+      }
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--fh);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        padding: 6px 12px;
+        border-radius: 100px;
+        border: 1px solid var(--line2);
+        color: var(--text2);
+        background: var(--bg2);
+        text-decoration: none;
+        transition: all 0.18s;
+      }
+      .filter-chip:hover {
+        border-color: var(--abdr);
+        color: var(--text);
+        background: var(--bg3);
+      }
+      .filter-active {
+        background: var(--adim);
+        color: var(--accent);
+        border-color: var(--abdr);
+      }
+      .filter-icon { font-size: 0.85rem; }
+      .filter-orange:hover { border-color: rgba(251, 146, 60, 0.30); color: var(--orange); }
+      .filter-cyan:hover   { border-color: var(--abdr); color: var(--accent); }
+      .filter-purple:hover { border-color: rgba(167, 139, 250, 0.30); color: var(--purple); }
+      .filter-red:hover    { border-color: rgba(248, 113, 113, 0.30); color: var(--red); }
+      .filter-blue:hover   { border-color: rgba(96, 165, 250, 0.30); color: var(--blue); }
+
+      /* Post list */
+      .post-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .post-item { list-style: none; }
+      .post-item-link {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 1.5rem;
+        padding: 1.25rem;
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        border-radius: var(--rl);
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.18s, transform 0.18s;
+      }
+      .post-item-link:hover {
+        border-color: var(--abdr);
+        transform: translateY(-1px);
+        color: inherit;
+      }
+      .post-item-image {
+        border-radius: var(--r);
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        background: var(--bg3);
+      }
+      .post-item-image :global(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .post-item-body {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .post-item-meta {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+      .post-pillar {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--fh);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 100px;
+        border: 1px solid;
+      }
+      .pp-icon { font-size: 0.8rem; }
+      .tc-orange { color: var(--orange); background: rgba(251, 146, 60, 0.10); border-color: rgba(251, 146, 60, 0.24); }
+      .tc-cyan   { color: var(--accent); background: var(--adim);              border-color: var(--abdr); }
+      .tc-purple { color: var(--purple); background: rgba(167, 139, 250, 0.10); border-color: rgba(167, 139, 250, 0.24); }
+      .tc-red    { color: var(--red);    background: rgba(248, 113, 113, 0.10); border-color: rgba(248, 113, 113, 0.24); }
+      .tc-blue   { color: var(--blue);   background: rgba(96, 165, 250, 0.10);  border-color: rgba(96, 165, 250, 0.24); }
+      .post-item-date {
+        font-size: 0.72rem;
+        color: var(--text3);
+        font-family: var(--fm);
+      }
+      .post-item-title {
+        font-family: var(--fh);
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text);
+        margin: 0 0 0.5rem;
+      }
+      .post-item-link:hover .post-item-title { color: var(--accent); }
+      .post-item-desc {
+        font-size: 0.9rem;
+        color: var(--text2);
+        line-height: 1.65;
+        margin: 0 0 0.75rem;
+      }
+      .post-item-media {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: auto;
+      }
+      .mm-badge {
+        font-family: var(--fm);
+        font-size: 0.65rem;
+        color: var(--text3);
+        padding: 3px 8px;
+        border-radius: 100px;
+        background: var(--bg3);
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        border-radius: var(--rl);
+      }
+      .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .empty-title {
+        font-family: var(--fh);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+      }
+      .empty-desc {
+        font-size: 0.95rem;
+        color: var(--text2);
+        line-height: 1.7;
+        max-width: 560px;
+        margin: 0 auto 1.75rem;
+      }
+
+      @media (max-width: 720px) {
+        .post-item-link {
+          grid-template-columns: 1fr;
+        }
+        .post-item-image { aspect-ratio: 2 / 1; max-width: 100%; }
+      }
+    </style>
+  </body>
 </html>
