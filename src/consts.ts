@@ -41,7 +41,7 @@ export const TOPIC_PILLARS = [
 // Certification count: memory confirms AIF-C01 (2026-06-17). Update to match total earned certs.
 export const HERO_STATS = [
   { value: '5', suffix: '', label: 'Topic Pillars' },
-  { value: '10', suffix: '+', label: 'Yrs Experience' },
+  { value: '15', suffix: '+', label: 'Yrs Experience' },
   { value: '3', suffix: 'x', label: 'AWS Certified' },
   { value: 'AU·UK·US', suffix: '', label: 'Multi-Region' },
 ];
