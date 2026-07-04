@@ -8,12 +8,13 @@ export const SITE_DESCRIPTION =
 
 // Note: canonical site URL is set in astro.config.mjs (`site` field). Do not duplicate here.
 
-// Author identity for the educator brand (kept separate from PRIT Cloud consulting identity).
+// Brand persona for the educator surface.
+// Per brand-isolation policy: no personal name/identity here. The brand IS the persona.
 export const AUTHOR = {
-  name: 'Chandramani Tiwari',
-  role: 'Principal Cloud Architect · DevSecOps Lead',
+  name: 'OneMoreTechie',
+  role: 'A Principal Cloud Architect & DevSecOps leader',
   bio: 'Sharing production-grade guidance across AWS, DevOps, Cloud Architecture, Security and IaC — the topics I work with daily.',
-  initials: 'CT',
+  initials: 'OMT',
 };
 
 // Social + brand surfaces
