@@ -1,0 +1,177 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths() {
+  const topics = await getCollection('topics');
+  return topics.map((topic) => ({
+    params: { slug: topic.data.slug },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+const { Content } = await render(topic);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`${topic.data.title} · ${SITE_TITLE}`} description={topic.data.description} />
+  </head>
+  <body>
+    <Header />
+    <main class="wrap topic-page">
+      <div class={`topic-hero tc-${topic.data.color}`}>
+        <div class="topic-icon-lg">{topic.data.icon}</div>
+        <div>
+          <div class="section-label">Topic Pillar</div>
+          <h1 class="topic-h1">{topic.data.title}</h1>
+          <p class="topic-lede">{topic.data.description}</p>
+
+          {(topic.data.youtube_url || topic.data.github_repo) && (
+            <div class="topic-media">
+              {topic.data.youtube_url && (
+                <a class="media-btn" href={topic.data.youtube_url} target="_blank" rel="noopener">
+                  <span class="media-icon">▶</span>
+                  <span>
+                    <span class="media-label">Watch on YouTube</span>
+                    <span class="media-sub">Video walkthrough</span>
+                  </span>
+                </a>
+              )}
+              {topic.data.github_repo && (
+                <a class="media-btn" href={topic.data.github_repo} target="_blank" rel="noopener">
+                  <span class="media-icon">◍</span>
+                  <span>
+                    <span class="media-label">Code on GitHub</span>
+                    <span class="media-sub">{topic.data.github_repo.replace('https://github.com/', '')}</span>
+                  </span>
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <article class="prose">
+        <Content />
+      </article>
+
+      <div class="topic-footer">
+        <a class="btn-outline" href="/">← Back home</a>
+        <a class="btn-primary" href={`/blog/?topic=${topic.data.slug}`}>Browse {topic.data.title} tutorials →</a>
+      </div>
+    </main>
+    <Footer />
+
+    <style>
+      .topic-page {
+        padding: 3rem 2rem 4rem;
+        max-width: 900px;
+      }
+      .topic-hero {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1.75rem;
+        align-items: flex-start;
+        padding: 2rem;
+        border-radius: var(--rl);
+        background: var(--bg2);
+        border: 1px solid var(--line2);
+        margin-bottom: 2.5rem;
+      }
+      .topic-icon-lg {
+        width: 64px; height: 64px;
+        border-radius: var(--r);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px;
+        flex-shrink: 0;
+      }
+      .tc-orange .topic-icon-lg { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
+      .tc-cyan   .topic-icon-lg { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
+      .tc-purple .topic-icon-lg { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
+      .tc-red    .topic-icon-lg { background: rgba(248, 113, 113, 0.14); color: var(--red); }
+      .tc-blue   .topic-icon-lg { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+
+      .topic-h1 {
+        font-family: var(--fh);
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0.35rem 0 0.75rem;
+        color: var(--text);
+      }
+      .topic-lede {
+        font-size: 1.05rem;
+        color: var(--text2);
+        line-height: 1.7;
+        max-width: 620px;
+      }
+
+      .topic-media {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+      .media-btn {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--line2);
+        border-radius: var(--r);
+        background: var(--bg3);
+        text-decoration: none;
+        color: var(--text);
+        transition: border-color 0.18s, background 0.18s;
+      }
+      .media-btn:hover {
+        border-color: var(--abdr);
+        background: var(--bg4);
+        color: var(--text);
+      }
+      .media-icon {
+        width: 32px; height: 32px;
+        border-radius: var(--r);
+        display: flex; align-items: center; justify-content: center;
+        background: var(--adim);
+        color: var(--accent);
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .media-label {
+        display: block;
+        font-family: var(--fh);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .media-sub {
+        display: block;
+        font-size: 0.72rem;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+
+      .topic-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 720px) {
+        .topic-hero { grid-template-columns: 1fr; }
+        .topic-media { grid-template-columns: 1fr; }
+      }
+    </style>
+  </body>
+</html>

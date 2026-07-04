@@ -1,0 +1,342 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, HERO_STATS } from '../consts';
+import { getCollection } from 'astro:content';
+
+// Load all topic pillars, sorted by their `order` field
+const topics = (await getCollection('topics'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// Load latest published blog posts (filter out drafts), newest first, take 4
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+
+    <!-- HERO -->
+    <section class="omt-hero">
+      <div class="hero-glow"></div>
+      <div class="hero-glow2"></div>
+      <div class="wrap">
+        <div class="chip">Tutorials &amp; How-To Guides for Cloud Professionals</div>
+        <h1 class="hero-title">
+          Learn. Build. <em>Ship</em><span class="hero-dim">.</span><br />
+          <span class="hero-dim">One tutorial at a time.</span>
+        </h1>
+        <p class="hero-sub">
+          Practical, hands-on guides covering AWS, DevOps, Cloud Architecture, Security,
+          and Infrastructure as Code — written by a Principal Cloud Architect for engineers
+          who ship to production.
+        </p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="/blog/">Browse Guides →</a>
+          <a class="btn-outline" href="/about/">About Me</a>
+        </div>
+        <div class="hero-stats">
+          {HERO_STATS.map((s) => (
+            <div class="stat">
+              <div class="stat-val">{s.value}<span>{s.suffix}</span></div>
+              <div class="stat-lbl">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- TOPICS -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-label">Topic Areas</div>
+        <div class="section-title">Five pillars of cloud engineering</div>
+        <p class="section-sub">
+          Field-tested guidance across the disciplines that matter for delivery, scale
+          and security on AWS.
+        </p>
+
+        <div class="topic-grid">
+          {topics.map((t) => (
+            <a class={`topic-card tc-${t.data.color}`} href={`/topics/${t.data.slug}/`}>
+              <div class="topic-icon">{t.data.icon}</div>
+              <div class="topic-name">{t.data.title}</div>
+              <div class="topic-desc">{t.data.description}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- LATEST POSTS -->
+    {posts.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <div class="section-label">Latest</div>
+          <div class="section-title">Recent tutorials &amp; deep-dives</div>
+          <div class="posts-grid">
+            {posts.map((p) => (
+              <a class="post-card" href={`/blog/${p.id}/`}>
+                <div class="post-meta">
+                  <span class="post-topic">{p.data.topic}</span>
+                  <span class="post-date"><FormattedDate date={p.data.pubDate} /></span>
+                </div>
+                <h3 class="post-title">{p.data.title}</h3>
+                <p class="post-excerpt">{p.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {posts.length === 0 && (
+      <section class="section">
+        <div class="wrap coming-soon">
+          <div class="section-label">Coming soon</div>
+          <div class="section-title">First tutorials publish week of 2026-06-22</div>
+          <p class="section-sub">
+            8 topic capsules land Mon &amp; Thu through 2026-07-16 — multi-region failover,
+            well-architected reviews, IAM at scale, Terraform at scale, EKS production,
+            cost optimisation, CI/CD design, and multi-tenant SaaS system design.
+          </p>
+          <a class="btn-outline" href={`https://youtube.com/@onemoretechie`} target="_blank" rel="noopener">
+            Subscribe on YouTube →
+          </a>
+        </div>
+      </section>
+    )}
+
+    <Footer />
+
+    <style>
+      /* HERO */
+      .omt-hero {
+        padding: 5rem 0 4rem;
+        border-bottom: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-glow {
+        position: absolute;
+        top: -200px; right: -150px;
+        width: 700px; height: 700px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(34, 211, 200, 0.06) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .hero-glow2 {
+        position: absolute;
+        bottom: -100px; left: -100px;
+        width: 400px; height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(34, 211, 200, 0.04) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .chip { margin-bottom: 1.75rem; }
+      .hero-title {
+        font-family: var(--fh);
+        font-weight: 800;
+        font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+        color: var(--text);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+        max-width: 720px;
+      }
+      .hero-title em { font-style: normal; color: var(--accent); }
+      .hero-title .hero-dim { color: var(--text2); }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--text2);
+        line-height: 1.8;
+        max-width: 620px;
+        margin-bottom: 2.25rem;
+        font-weight: 300;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 3.5rem;
+      }
+      .hero-stats {
+        display: flex;
+        gap: 3rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      .stat-val {
+        font-family: var(--fh);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1;
+      }
+      .stat-val span { color: var(--accent); }
+      .stat-lbl {
+        font-size: 0.72rem;
+        color: var(--text3);
+        margin-top: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      /* TOPIC GRID (5 pillars, single row on desktop) */
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1px;
+        background: var(--line2);
+        border: 1px solid var(--line2);
+        border-radius: var(--rl);
+        overflow: hidden;
+        margin-top: 2.5rem;
+      }
+      .topic-card {
+        background: var(--bg2);
+        padding: 1.75rem 1.5rem;
+        transition: background 0.2s;
+        position: relative;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+      }
+      .topic-card:hover { background: var(--bg3); color: inherit; }
+      .topic-card::after {
+        content: '↗';
+        position: absolute;
+        top: 1.25rem; right: 1.25rem;
+        color: var(--text3);
+        font-size: 0.85rem;
+        transition: color 0.2s, transform 0.2s;
+      }
+      .topic-card:hover::after {
+        color: var(--accent);
+        transform: translate(2px, -2px);
+      }
+      .topic-icon {
+        width: 40px; height: 40px;
+        border-radius: var(--r);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        margin-bottom: 1rem;
+      }
+      .tc-orange .topic-icon { background: rgba(251, 146, 60, 0.14); color: var(--orange); }
+      .tc-cyan   .topic-icon { background: rgba(34, 211, 200, 0.14); color: var(--accent); }
+      .tc-purple .topic-icon { background: rgba(167, 139, 250, 0.14); color: var(--purple); }
+      .tc-red    .topic-icon { background: rgba(248, 113, 113, 0.14); color: var(--red); }
+      .tc-blue   .topic-icon { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+      .topic-name {
+        font-family: var(--fh);
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+      }
+      .topic-desc {
+        font-size: 0.8rem;
+        color: var(--text2);
+        line-height: 1.6;
+      }
+
+      /* POSTS */
+      .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-top: 2rem;
+      }
+      .post-card {
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        border-radius: var(--rl);
+        padding: 1.75rem;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.18s, transform 0.18s;
+        display: block;
+      }
+      .post-card:hover {
+        border-color: var(--abdr);
+        transform: translateY(-2px);
+        color: inherit;
+      }
+      .post-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.85rem;
+      }
+      .post-topic {
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        padding: 3px 9px;
+        border-radius: 100px;
+        color: var(--accent);
+        background: var(--adim);
+        border: 1px solid var(--abdr);
+      }
+      .post-date {
+        font-size: 0.7rem;
+        color: var(--text3);
+        font-family: var(--fm);
+      }
+      .post-title {
+        font-family: var(--fh);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+      }
+      .post-card:hover .post-title { color: var(--accent); }
+      .post-excerpt {
+        font-size: 0.85rem;
+        color: var(--text2);
+        line-height: 1.7;
+      }
+
+      /* COMING SOON */
+      .coming-soon {
+        text-align: center;
+        padding: 3rem 0;
+      }
+      .coming-soon .section-label,
+      .coming-soon .section-title { text-align: center; }
+      .coming-soon .section-sub {
+        margin: 0.75rem auto 1.75rem;
+        text-align: center;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 1280px) {
+        .topic-grid { grid-template-columns: repeat(3, 1fr); }
+      }
+      @media (max-width: 1024px) {
+        .topic-grid { grid-template-columns: repeat(2, 1fr); }
+        .posts-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 720px) {
+        .topic-grid { grid-template-columns: 1fr; }
+        .hero-title { font-size: 2.1rem; }
+        .hero-stats { gap: 1.75rem; }
+      }
+    </style>
+  </body>
+</html>
